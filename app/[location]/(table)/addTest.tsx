@@ -6,7 +6,6 @@ import {revalidatePath} from "next/cache";
 export default function AddTest({test_vars}: {test_vars:testVariables}){
     const [date, setDate] = useState("")
     const pb = new PocketBase('https://pocketbase-production-2a51.up.railway.app');
-
     const handleCreate = async (e:{preventDefault: () => void;}) =>{
         e.preventDefault();
         try{

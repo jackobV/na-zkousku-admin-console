@@ -10,6 +10,7 @@ export type TerminTestuInLocation = {
     customers: number
     archived: boolean
     full: boolean
+    location:string
 }
 
 export const columns: ColumnDef<TerminTestuInLocation>[] = [
@@ -18,8 +19,9 @@ export const columns: ColumnDef<TerminTestuInLocation>[] = [
         header: "Datum",
     },
     {
-        accessorKey: "customers",
+        accessorKey: "id",
         header: "Přihlášených",
+        cell:({row}) => <a href={row.original.location+"/"+row.original.id+"/"}>{row.original.customers}</a>
     },
     {
         accessorKey: "archived",

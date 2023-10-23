@@ -27,7 +27,7 @@ export default function Page({ params }: { params: { location: string } }){
                 setTestVariables({
                     location:params.location,
                     stripe_test_price_id:resultOne.stripe_test_price_id,
-                    stripe_price_id:"",
+                    stripe_price_id:resultOne.stripe_price_id,
                     price:resultOne.price
                 })
 
@@ -37,9 +37,10 @@ export default function Page({ params }: { params: { location: string } }){
                 const testDateListForLocationFiltered:Array<TerminTestuInLocation> = testDateListForLocationApiCall.map((termin:any)=>({
                     id:termin.id,
                     datum:FormatDate(termin.date),
-                    customers:termin.users?.length,
+                    customers:termin.tickets?.length,
                     archived:termin.archived,
                     full:termin.full,
+                    location:params.location
                 }))
                 setTestDateListForLocation(testDateListForLocationFiltered)
             }

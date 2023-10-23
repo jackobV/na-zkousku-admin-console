@@ -21,7 +21,8 @@ export default function Page({ params }: { params: { id: string } }){
                 const userMap:UserCustomer = userList.expand?.tickets.map((user:any) => ({
                     name:user.expand.user.name,
                     surname:user.expand.user.surname,
-                    email:user.expand.user.email
+                    email:user.expand.user.email,
+                    ticketId:user.id,
                 }))
                 setUsers(userMap)
             }
