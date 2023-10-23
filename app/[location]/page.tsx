@@ -37,7 +37,7 @@ export default function Page({ params }: { params: { location: string } }){
                 const testDateListForLocationFiltered:Array<TerminTestuInLocation> = testDateListForLocationApiCall.map((termin:any)=>({
                     id:termin.id,
                     datum:FormatDate(termin.date),
-                    customers:termin.tickets?.length,
+                    customers:termin.tickets.length,
                     archived:termin.archived,
                     full:termin.full,
                     location:params.location
