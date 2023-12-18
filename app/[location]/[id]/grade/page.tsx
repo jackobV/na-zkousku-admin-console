@@ -29,11 +29,11 @@ export default async function Page({ params }: { params: { id: string } }) {
         const userMap: ticketForGrading[] = userList.expand.tickets.map((user: any) => ({
             personName: user.expand.user.name,
             personSurname: user.expand.user.surname,
-            mathGrade: user.expand.mat,
-            cjGrade: user.expand.cj,
+            mathGrade: user.mat,
+            cjGrade: user.cj,
             ticketId: user.id,
         }));
-
+        console.log(userList.expand.tickets)
         return (
             <div>
                 <GradingForm tickets={userMap} />

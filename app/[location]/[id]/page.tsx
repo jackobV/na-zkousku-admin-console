@@ -10,13 +10,22 @@ import {UsersInTestTable} from "@/app/[location]/[id]/(table)/usersInTestTable";
 import {useRouter} from "next/navigation";
 import {Dialog, Transition} from "@headlessui/react";
 import {ExclamationTriangleIcon} from "@heroicons/react/24/outline";
-
+import CopyTicketIds from "@/app/[location]/[id]/(idlist)/copyTicketIds";
+export interface ticket{
+    ticketId:string;
+    firstName:string;
+    secondName:string;
+}
+export interface tickets{
+    tickets:Array<ticket>;
+}
 export default function Page({ params }: { params: { id: string } }){
     const [open, setOpen] = useState(false)
     const cancelButtonRef = useRef(null)
     const router = useRouter()
     const pb = new PocketBase('https://pocketbase-production-2a51.up.railway.app');
-    const [users, setUsers] = useState<UserCustomer|undefined>(undefined)
+    const [users, setUsers] = useState<Array<UserCustomer>|undefined>(undefined)
+    const [tickets,setTickets] = useState<tickets|undefined>(undefined)
     const fetchData = async () => {
         try{
             if(pb.authStore.model?.id){
@@ -30,7 +39,14 @@ export default function Page({ params }: { params: { id: string } }){
                     email:user.expand.user.email,
                     ticketId:user.id,
                 }))
+                // @ts-ignore
                 setUsers(userMap)
+                const ticekts:Array<ticket> = userList.expand?.tickets?.map((user:any)=>({
+                    ticketId:user.id,
+                    firstName:user.expand.user.name,
+                    secondName:user.expand.user.surname
+                })) ?? [];
+                setTickets({tickets:ticekts});
             }
         } catch (e){
             console.log(e)
@@ -59,9 +75,11 @@ export default function Page({ params }: { params: { id: string } }){
     return(
         <div>
             <section className="pt-10">
-                {users?
-                    // @ts-ignore
-                    <UsersInTestTable columns={columnsCustomers} data={users} />
+                {users && tickets?
+                    <div>
+                        <UsersInTestTable columns={columnsCustomers} data={users} />
+                        <CopyTicketIds tickets={tickets} />
+                    </div>
                     :
                     <div></div>
                 }
