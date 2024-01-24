@@ -11,6 +11,8 @@ import {useRouter} from "next/navigation";
 import {Dialog, Transition} from "@headlessui/react";
 import {ExclamationTriangleIcon} from "@heroicons/react/24/outline";
 import CopyTicketIds from "@/app/[location]/[id]/(idlist)/copyTicketIds";
+import ManageTest, {TestManageProps} from "@/app/[location]/[id]/(components)/manageTest";
+import {undefined} from "zod";
 export interface ticket{
     ticketId:string;
     firstName:string;
@@ -24,15 +26,24 @@ export default function Page({ params }: { params: { id: string } }){
     const cancelButtonRef = useRef(null)
     const router = useRouter()
     const pb = new PocketBase('https://pocketbase-production-2a51.up.railway.app');
+    // @ts-ignore
     const [users, setUsers] = useState<Array<UserCustomer>|undefined>(undefined)
+    // @ts-ignore
     const [tickets,setTickets] = useState<tickets|undefined>(undefined)
+    // @ts-ignore
+    const [testManageObject,setTestManageObject] = useState<TestManageProps|undefined>(undefined)
     const fetchData = async () => {
         try{
             if(pb.authStore.model?.id){
                 const userList = await pb.collection("testy").getOne(params.id,{
                     expand:"tickets.user"
                 })
-
+                const testManObj = {
+                    full: userList.full,
+                    archived: userList.archived,
+                    id:params.id
+                }
+                setTestManageObject(testManObj)
                 const userMap:UserCustomer = userList.expand?.tickets.map((user:any) => ({
                     name:user.expand.user.name,
                     surname:user.expand.user.surname,
@@ -74,17 +85,33 @@ export default function Page({ params }: { params: { id: string } }){
     }
     return(
         <div>
-            <section className="pt-10">
-                {users && tickets?
+            <section className="pt-10 mx-auto max-w-5xl flex flex-col gap-y-5">
+                <div className="flex flex-row gap-x-3">
+                    <a href={params.id + "/mailing"} className="py-3 px-6 bg-gray-400 rounded-xl text-gray-800">Emailové funkce</a>
+                    {tickets ? <div className="py-3 px-6 bg-gray-400 rounded-xl text-gray-800"
+                    ><CopyTicketIds tickets={tickets} /></div>
+                        :
+                        <div></div>
+                    }
+
+                </div>
+                {users ?
                     <div>
                         <UsersInTestTable columns={columnsCustomers} data={users} />
-                        <CopyTicketIds tickets={tickets} />
                     </div>
                     :
                     <div></div>
                 }
+                {testManageObject ?
+                    <ManageTest testObj={testManageObject} />
+                        :
+                    <div></div>
+                }
+
                 <div>
-                    <button className="rounded-md bg-red-600 text-white py-2 w-fit px-2" onClick={(()=>setOpen(true))}>Smazat ticket</button>
+                    <div className="pt-10">
+                        <button className="rounded-md bg-red-600 text-white py-2 w-fit px-2 text-xs" onClick={(()=>setOpen(true))}>Smazat Testový den</button>
+                    </div>
                     <Transition.Root show={open} as={Fragment}>
                         <Dialog as="div" className="relative z-10" initialFocus={cancelButtonRef} onClose={setOpen}>
                             <Transition.Child
@@ -117,7 +144,7 @@ export default function Page({ params }: { params: { id: string } }){
                                                 </div>
                                                 <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
                                                     <Dialog.Title as="h3" className="text-base font-semibold leading-6 text-gray-900">
-                                                        Smazat ticket
+                                                        Smazat Testový den
                                                     </Dialog.Title>
                                                     <div className="mt-2">
                                                         <p className="text-sm text-gray-500">
@@ -126,13 +153,13 @@ export default function Page({ params }: { params: { id: string } }){
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
+                                            <div className="mt-10 sm:mt-10 sm:flex sm:flex-row-reverse">
                                                 <button
                                                     type="button"
                                                     className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
                                                     onClick={handleDelete}
                                                 >
-                                                    Smazat
+                                                    Smazat Testový den
                                                 </button>
                                                 <button
                                                     type="button"

@@ -32,7 +32,7 @@ export function UsersInTestTable<TData, TValue>({
     })
 
     return (
-        <div className="rounded-md border mx-auto max-w-5xl">
+        <div className="rounded-md border ">
             <Table>
                 <TableHeader>
                     {table.getHeaderGroups().map((headerGroup) => (
