@@ -58,7 +58,7 @@ export default function Page({ params }: { params: { id: string } }){
                 filter:`location = "${ticketDataSanitized.testLocation}" && full = false && archived = false`
             })
             const testDateListSanitized:Array<testDate> = testDateList.map((testDate:any)=>({
-                datum:FormatDate(testDate.date),
+                datum:`${FormatDate(testDate.date).day}.${FormatDate(testDate.date).month}`,
                 id:testDate.id
             }))
             setTestDatesList(testDateListSanitized)
@@ -138,11 +138,11 @@ export default function Page({ params }: { params: { id: string } }){
                         </div>
                         <div className="grid grid-cols-6 gap-x-5 w-full">
                             <div className="font-light text-gray-700 col-span-2">Datum testu:</div>
-                            <div className="col-span-4">{FormatDate(ticket.testDate)}</div>
+                            <div className="col-span-4">{`${FormatDate(ticket.testDate).day}.${FormatDate(ticket.testDate).month}`}</div>
                         </div>
                         <div className="grid grid-cols-6 gap-x-5 w-full">
                             <div className="font-light text-gray-700 col-span-2">Datum zakoupení:</div>
-                            <div className="col-span-4">{FormatDate(ticket.ticketDate)}</div>
+                            <div className="col-span-4">{`${FormatDate(ticket.ticketDate).day}.${FormatDate(ticket.ticketDate).month}`}</div>
                         </div>
                     </div>
                     <div className="flex flex-col pt-3">
@@ -317,7 +317,7 @@ export default function Page({ params }: { params: { id: string } }){
                                                 <p className="text-sm text-gray-500">
                                                     Jste si jisti že chcete změnit termín ticketu?
                                                 </p>
-                                                <p className="text-red-500 line-through">{FormatDate(ticket?.testDate)}</p>
+                                                <p className="text-red-500 line-through">{`${FormatDate(ticket?.testDate).day}.${FormatDate(ticket?.testDate).month}`}</p>
                                                 <p>{selectedDate?.datum}</p>
                                             </div>
                                         </div>

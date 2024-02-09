@@ -15,6 +15,10 @@ const config: Config = {
       },
     },
   },
-  plugins: [],
+  plugins: [require("@tailwindcss/forms")],
+}
+module.exports = {
+  darkMode: 'class',
+  // ...
 }
 export default config
