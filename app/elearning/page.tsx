@@ -5,6 +5,7 @@ import {
 } from "@/app/elearning/(components-elearning)/(table-elearning)/columns";
 import FormatDate from "@/app/(genericFunctions)/functions";
 import {TableViewsElearning} from "@/app/elearning/(components-elearning)/(table-elearning)/tableViewsElearning";
+export const revalidate = 0 // revalidate at most every hour
 export default async function Page(){
     const pb = new PocketBase('https://pocketbase-production-2a51.up.railway.app');
     const records = await pb.collection('question_bank').getFullList({
