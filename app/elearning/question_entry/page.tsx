@@ -37,7 +37,7 @@ export default function Page(){
     const [statusBar,setStatusBar] = useState(0)
     const [darkMode, setDarkMode] = useState(true)
     const [question, setQuestion] = useState('');
-    const [choices, setChoices] = useState<Array<ChoiceInterface>>([{id:0,text:"",correct:false},{id:1,text:"",correct:false},{id:2,text:"",correct:false}]); // Start with 3 empty choices
+    const [choices, setChoices] = useState<Array<ChoiceInterface>>([{id:0,text:"",correct:false},{id:1,text:"",correct:false},{id:2,text:"",correct:false},{id:3,text:"",correct:false}]); // Start with 3 empty choices
     const [solution, setSolution] = useState('');
     const [errorMessage, setErrorMessage] = useState("Problém při ukládání otázky")
     const [selectedCategory,setSelectedCategory] = useState<categoryinterface>({id:0,name:"not selected"})
@@ -48,7 +48,6 @@ export default function Page(){
             setQuestion('')
             setChoices([{id:0,text:"",correct:false},{id:1,text:"",correct:false},{id:2,text:"",correct:false}])
             setSolution('')
-            setDifficulty(0)
             setTimeout(()=>{
                 setStatusBar(0)
             },1000)

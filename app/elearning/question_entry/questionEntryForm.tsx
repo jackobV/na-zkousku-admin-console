@@ -86,6 +86,23 @@ const QuestionForm = ({setStatus, question,setQuestion,choices,setChoices,soluti
                                 <label className="dark:text-gray-300 pb-2">Category</label>
                                 <CategoryPicker category={category} selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} />
                             </div>
+                            <div className="pb-6 ">
+                                <p className="pb-2">Obtížnost</p>
+                                <div className="flex flex-row justify-between ">
+
+                                    {[1,2,3,4,5,6,7,8,9,10].map((item,index)=>(
+                                        <div>
+                                            {
+                                                difficulty === item?
+                                                    <button type="button" onClick={()=>setDifficulty(item)} className="border rounded-lg bg-slate-600 border-0 py-2 px-5">{item}</button>:
+                                                    <button type="button" onClick={()=>setDifficulty(item)} className="border rounded-lg border-slate-600 py-2 px-5">{item}</button>
+
+                                            }
+                                        </div>
+
+                                    ))}
+                                </div>
+                            </div>
                             <div className="w-full flex flex-col pb-6">
                                 <label className="dark:text-gray-300 pb-2">Text of the Question:</label>
                                 <textarea className="w-full border-2 dark:border-slate-700 h-40 dark:bg-slate-900 dark:text-gray-300 rounded-lg p-1 " value={question} onChange={(e) => setQuestion(e.target.value)} />
@@ -120,29 +137,12 @@ const QuestionForm = ({setStatus, question,setQuestion,choices,setChoices,soluti
 
                                 <button type="button" className="dark:text-gray-300" onClick={addChoice}>Add Choice</button>
                             </div>
-                            <div className="w-full flex flex-col pb-6">
+                            <button onClick={sendQuestion} className="bg-gray-200 dark:text-gray-300 dark:bg-blue-800 py-2 px-10 rounded-lg">{create?<span>Submit</span>:<span>Update</span>}</button>
+
+                            <div className="w-full flex flex-col py-6">
                                 <label className="dark:text-gray-300 pb-2">Solution:</label>
                                 <textarea className="w-full border-2 dark:border-slate-700 h-40 dark:bg-slate-900 dark:text-gray-300 rounded-lg p-1" value={solution} onChange={(e) => setSolution(e.target.value)} />
                             </div>
-                            <div className="pb-6 ">
-                                <p className="pb-2">Obtížnost</p>
-                            <div className="flex flex-row justify-between ">
-
-                                {[1,2,3,4,5,6,7,8,9,10].map((item,index)=>(
-                                    <div>
-                                        {
-                                            difficulty === item?
-                                                <button type="button" onClick={()=>setDifficulty(item)} className="border rounded-lg bg-slate-600 border-0 py-2 px-5">{item}</button>:
-                                                <button type="button" onClick={()=>setDifficulty(item)} className="border rounded-lg border-slate-600 py-2 px-5">{item}</button>
-
-                                        }
-                                    </div>
-
-                                ))}
-                                </div>
-                            </div>
-
-                            <button onClick={sendQuestion} className="bg-gray-200 dark:text-gray-300 dark:bg-blue-800 py-2 px-10 rounded-lg">{create?<span>Submit</span>:<span>Update</span>}</button>
                         </form>
                     </div>
                     <div className="h-screen w-[1px] bg-black flex"></div>

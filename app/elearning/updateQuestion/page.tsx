@@ -41,7 +41,7 @@ export default function Page(){
         if(statusBar==2){
             setSolution('')
             setQuestion('')
-            setChoices([{id:0,text:"",correct:false},{id:1,text:"",correct:false},{id:2,text:"",correct:false}])
+            setChoices([{id:0,text:"",correct:false},{id:1,text:"",correct:false},{id:2,text:"",correct:false},{id:3,text:"",correct:false}])
             setSolution('')
             setTimeout(()=>{
                 setStatusBar(0)
