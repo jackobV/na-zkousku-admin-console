@@ -6,6 +6,7 @@ export interface ChoiceInterface {
     id:number
 }
 interface jsonQuestionInterface {
+    parentText:string;
     questionText:string,
     choices:Array<ChoiceInterface>,
     solution:string,
@@ -16,8 +17,9 @@ import Markdown from 'react-markdown';
 import {MathpixMarkdown, MathpixLoader} from 'mathpix-markdown-it';
 import {CheckCircleIcon} from "lucide-react";
 import CategoryPicker, {categoryinterface} from "@/app/elearning/question_entry/CategoryPicker";
+import FigureSelect, {figureStruct} from "@/app/elearning/question_entry/FigureSelect";
 const pb = new PocketBase('https://pocketbase-production-2a51.up.railway.app');
-const QuestionForm = ({setStatus, question,setQuestion,choices,setChoices,solution,setSolution,errorMessage,SetErrorMessage,category, selectedCategory, setSelectedCategory,create,id,difficulty,setDifficulty}:{setStatus:React.Dispatch<React.SetStateAction<number>>,question:string,setQuestion:React.Dispatch<React.SetStateAction<string>>,choices:Array<ChoiceInterface>,setChoices:React.Dispatch<React.SetStateAction<Array<ChoiceInterface>>>,solution:string,setSolution:React.Dispatch<React.SetStateAction<string>>,errorMessage:string,SetErrorMessage:React.Dispatch<React.SetStateAction<string>>,category:Array<categoryinterface>,selectedCategory:categoryinterface,setSelectedCategory:Dispatch<SetStateAction<{id: number, name: string}>>, create:boolean,id:string|undefined,difficulty:number|undefined,setDifficulty:Dispatch<SetStateAction<number|undefined>>}) => {
+const QuestionForm = ({setStatus, question,setQuestion,choices,setChoices,solution,setSolution,errorMessage,SetErrorMessage,category, selectedCategory, setSelectedCategory,create,id,difficulty,setDifficulty,isParentQuestion,setIsParentQuestion, parentText,setParentText,openFigureDialog,setOpenFigureDialog,selectedFigure,setSelectedFigure}:{setStatus:React.Dispatch<React.SetStateAction<number>>,question:string,setQuestion:React.Dispatch<React.SetStateAction<string>>,choices:Array<ChoiceInterface>,setChoices:React.Dispatch<React.SetStateAction<Array<ChoiceInterface>>>,solution:string,setSolution:React.Dispatch<React.SetStateAction<string>>,errorMessage:string,SetErrorMessage:React.Dispatch<React.SetStateAction<string>>,category:Array<categoryinterface>,selectedCategory:categoryinterface,setSelectedCategory:Dispatch<SetStateAction<{id: number, name: string}>>, create:boolean,id:string|undefined,difficulty:number|undefined,setDifficulty:Dispatch<SetStateAction<number|undefined>>,isParentQuestion:boolean,setIsParentQuestion:Dispatch<SetStateAction<boolean>>,parentText:string|undefined,setParentText:Dispatch<SetStateAction<string|undefined>>,openFigureDialog:boolean,setOpenFigureDialog:Dispatch<SetStateAction<boolean>>,selectedFigure:figureStruct|undefined,setSelectedFigure:Dispatch<SetStateAction<figureStruct|undefined>>}) => {
        // Function to handle choices input change
     const handleChoiceTextChange = (index: number, value: string) => {
         const newChoices = choices.map((choice, idx) =>
@@ -45,6 +47,7 @@ const QuestionForm = ({setStatus, question,setQuestion,choices,setChoices,soluti
         e.preventDefault()
         setStatus(1); // Set status to loading
         const jsonQuestion: jsonQuestionInterface = {
+            parentText:parentText? parentText:"",
             questionText: question,
             choices: choices,
             solution: solution
@@ -52,6 +55,20 @@ const QuestionForm = ({setStatus, question,setQuestion,choices,setChoices,soluti
 
         try {
             if(create){
+                if(selectedFigure){
+                    await pb.collection("question_bank").create({
+                        json_question:jsonQuestion,
+                        category:selectedCategory.name,
+                        difficulty:difficulty,
+                        figure:selectedFigure.id
+                    })
+                }else{
+                    await pb.collection("question_bank").create({
+                        json_question:jsonQuestion,
+                        category:selectedCategory.name,
+                        difficulty:difficulty,
+                    })
+                }
                 await pb.collection('question_bank').create({
                     json_question:jsonQuestion,
                     category:selectedCategory.name,
@@ -74,7 +91,14 @@ const QuestionForm = ({setStatus, question,setQuestion,choices,setChoices,soluti
             // @ts-ignore
         }
     };
-
+    const changeIsParentQuestion = () => {
+        if(isParentQuestion){
+            setParentText(undefined)
+            setIsParentQuestion(false)
+        }else{
+            setIsParentQuestion(true)
+        }
+    }
 
     // @ts-ignore
     return (
@@ -86,10 +110,16 @@ const QuestionForm = ({setStatus, question,setQuestion,choices,setChoices,soluti
                                 <label className="dark:text-gray-300 pb-2">Category</label>
                                 <CategoryPicker category={category} selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} />
                             </div>
+                            <div className="flex flex-col pb-6">
+                                <button type={"button"} onClick={()=>setOpenFigureDialog(true)}>Choose figure</button>
+                            </div>
+                            <div className=" flex flex-row gap-x-3 items-center pb-6">
+                                <label className="dark:text-gray-300">Is parent question</label>
+                                <input className="w-6 h-6" onClick={changeIsParentQuestion} type="checkbox" onChange={changeIsParentQuestion} checked={isParentQuestion}></input>
+                            </div>
                             <div className="pb-6 ">
                                 <p className="pb-2">Obtížnost</p>
                                 <div className="flex flex-row justify-between ">
-
                                     {[1,2,3,4,5,6,7,8,9,10].map((item,index)=>(
                                         <div>
                                             {
@@ -103,10 +133,17 @@ const QuestionForm = ({setStatus, question,setQuestion,choices,setChoices,soluti
                                     ))}
                                 </div>
                             </div>
+                            {isParentQuestion?
+                                <div className="w-full flex flex-col pb-6">
+                                    <label className="dark:text-gray-300 pb-2">Parent text:</label>
+                                    <textarea className="w-full border-2 dark:border-slate-700 h-40 dark:bg-slate-900 dark:text-gray-300 rounded-lg p-1 " value={parentText} onChange={(e) => setParentText(e.target.value)} />
+                                </div>:<div></div>
+                            }
                             <div className="w-full flex flex-col pb-6">
                                 <label className="dark:text-gray-300 pb-2">Text of the Question:</label>
                                 <textarea className="w-full border-2 dark:border-slate-700 h-40 dark:bg-slate-900 dark:text-gray-300 rounded-lg p-1 " value={question} onChange={(e) => setQuestion(e.target.value)} />
                             </div>
+
                             <div className="flex-col pb-6">
                                 <div className="grid grid-cols-12 w-full pb-2">
                                     <label className="col-span-10 text-start dark:text-gray-300">Choices:</label>
@@ -149,6 +186,21 @@ const QuestionForm = ({setStatus, question,setQuestion,choices,setChoices,soluti
                     <div className="max-w-md dark:text-gray-300">
                         <h2 className="">Markdown Preview</h2>
                         <div className="flex flex-col">
+                            {parentText?
+                                <div>
+                                    <strong className="">Parent text:</strong>
+                                    {/*
+// @ts-ignore */}
+                                    <MathpixLoader>
+                                        {/*
+// @ts-ignore */}
+                                        <MathpixMarkdown text={parentText}/>
+                                    </MathpixLoader>
+                                </div>
+                                :
+                        <div></div>
+                            }
+
                             <strong className="">Question text:</strong>
                             {/*
 // @ts-ignore */}
@@ -191,6 +243,7 @@ const QuestionForm = ({setStatus, question,setQuestion,choices,setChoices,soluti
                         </div>
                     </div>
                 </div>
+                <FigureSelect openFigureDialog={openFigureDialog} setOpenFigureDialog={setOpenFigureDialog} selectedFigure={selectedFigure} setSelectedFigure={setSelectedFigure}  />
             </div>
 
     );

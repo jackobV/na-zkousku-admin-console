@@ -6,6 +6,7 @@ import {InformationCircleIcon, XCircleIcon} from "@heroicons/react/20/solid";
 import {CheckCircleIcon} from "lucide-react";
 import QuestionForm, {ChoiceInterface} from "@/app/elearning/question_entry/questionEntryForm";
 import {categoryinterface} from "@/app/elearning/question_entry/CategoryPicker";
+import {figureStruct} from "@/app/elearning/question_entry/FigureSelect";
 export default function Page(){
     const categories:Array<categoryinterface>=[
         {
@@ -42,6 +43,10 @@ export default function Page(){
     const [errorMessage, setErrorMessage] = useState("Problém při ukládání otázky")
     const [selectedCategory,setSelectedCategory] = useState<categoryinterface>({id:0,name:"not selected"})
     const [difficulty,setDifficulty]=useState<number|undefined>(0)
+    const [isParentQuestion,setIsParentQuestion]=useState(false)
+    const [parentText,setParentText]=useState<string|undefined>(undefined)
+    const [openFigureDialog,setOpenFigureDialog] = useState(false)
+    const [selectedFigure,setSelectedFigure] = useState<figureStruct|undefined>(undefined)
     useEffect(()=>{
         if(statusBar==2){
             setSolution('')
@@ -108,7 +113,7 @@ export default function Page(){
                                 <div></div>
                 }
             </div>
-            <QuestionForm setStatus={setStatusBar} question={question} setQuestion={setQuestion} setChoices={setChoices} choices={choices} setSolution={setSolution} solution={solution} SetErrorMessage={setErrorMessage} errorMessage={errorMessage} category={categories} setSelectedCategory={setSelectedCategory} selectedCategory={selectedCategory} create={true} id={undefined} difficulty={difficulty} setDifficulty={setDifficulty} />
+            <QuestionForm setStatus={setStatusBar} question={question} setQuestion={setQuestion} setChoices={setChoices} choices={choices} setSolution={setSolution} solution={solution} SetErrorMessage={setErrorMessage} errorMessage={errorMessage} category={categories} setSelectedCategory={setSelectedCategory} selectedCategory={selectedCategory} create={true} id={undefined} difficulty={difficulty} setDifficulty={setDifficulty} isParentQuestion={isParentQuestion} setIsParentQuestion={setIsParentQuestion} parentText={parentText} setParentText={setParentText} openFigureDialog={openFigureDialog} setOpenFigureDialog={setOpenFigureDialog} setSelectedFigure={setSelectedFigure} selectedFigure={selectedFigure} />
         </div>
     )
 }

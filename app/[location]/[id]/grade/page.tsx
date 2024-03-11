@@ -12,6 +12,7 @@ export interface ticketForGrading{
 export interface ticketArr{
     tickets:ticketForGrading[]
 }// ...
+export const revalidate = 0 // revalidate at most every hour
 
 export default async function Page({ params }: { params: { id: string } }) {
     const pb = new PocketBase('https://pocketbase-production-2a51.up.railway.app');
